@@ -35,20 +35,35 @@ from dataplotter import datamap
 
 
 # Year that is being processed
-year = 2019
-read_all = False
-type = 'CTD'
+years = np.arange(1973, 2020)
+# year = 2017
+for year in years:
+    read_all = True
+    type = 'CTD'
 
-# directory that stores all osd_archive_data
-archive_dir_test = '/run/user/1000/gvfs/smb-share:server=sid01hnas01b,share=osd_data/OSD_DataArchive/osd_data_final/'
+    # directory that stores all osd_archive_data
+    archive_dir_test = '/run/user/1000/gvfs/smb-share:server=sid01hnas01b,share=osd_data/OSD_DataArchive/osd_data_final/'
 
 
-if read_all:
+    if read_all:
 
-    data = profiles.read_ctd(archive_dir_test, year, 'CTD')
-    input('ctd created?')
+        data = profiles.read_ctd(archive_dir_test, year, type)
+        # input('ctd created?')
 
-else:
-    data = pd.read_csv('./data/ctd_'+str(year) + '.csv')
+    else:
+        data = pd.read_csv('./data/ctd_'+str(year) + '.csv')
 
-datamap.make_map(data)
+    # Make maps for a particular year
+    datamap.make_map(year, data, type)
+
+# Make maps for all years:
+data = pd.read_csv('./data/ctd_all.csv')
+datamap.make_allmap(data, type)
+# datamap.make_all_arcticmap(data, type)
+#
+# years = np.arange(1965, 2020)
+# counts=pd.read_csv('./data/ctd_counts.csv')
+# plt.plot(years, counts.CTD_counts, 'r*')
+# plt.grid()
+# plt.show()
+# profiles.count_ctd(archive_dir_test, years, type)
